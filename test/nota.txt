@@ -1,0 +1,32 @@
+SIN COMPOSE {
+  creamos una red
+    docker network create mired
+
+  creamos nuestra imagen en base a nuestro archivo DockerFile
+    docker build -t miapp:1 .
+                    -> nombre de la imagen
+                    -> :tag
+                            -> ruta donde se encuentra mi app (archivo DockerFile)
+
+  vamos a crear nuestros contenedores indicando a que red pertenecen
+    
+    MONGO {
+      docker create -p27017:27017 --name monguito --network mired -e MONGO_INITDB_ROOT_USERNAME=nico -e MONGO_INITDB_ROOT_PASSWORD=password mongo 
+    }
+
+    MIAPP {
+      docker create -p3000:3000 --name chanchito --network mired miapp:1
+    }
+
+  por ultimo arrancamos ambos contenedores
+
+    docker start chanchito
+    docker start monguito
+}
+
+
+COMPOSE {
+  docker compose up
+
+  docker compose -f docker-compose.dev.yml up
+}
